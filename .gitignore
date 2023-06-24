@@ -1,0 +1,7 @@
+# Environments
+venv/
+
+# VisualStudioCode
+.vscode/
+
+commands.txt
