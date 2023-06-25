@@ -1,10 +1,30 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import logo from "../images/react-icon.svg";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
 
-function Navbar() {
+function Navbar({ onSearch, onClear }) {
   const { logout } = useContext(AuthContext);
+  const [valueSearch, setSearchValue] = useState("");
+  const [isSearchActive, setIsSearchActive] = useState(false);
+
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    setSearchValue(value);
+    setIsSearchActive(value !== "");
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    onSearch(valueSearch);
+  };
+
+  const clearSearch = () => {
+    setSearchValue("");
+    setIsSearchActive(false);
+    onClear();
+  };
+
   return (
     <React.Fragment>
       <nav className="navbar navbar-expand-lg bg-light fixed-top bg-body-tertiary">
@@ -41,14 +61,22 @@ function Navbar() {
               </ul>
             </li>
           </ul>
-          <form className="d-flex" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button className="btn btn-primary" type="submit">
+          <form className="d-flex" role="search" onSubmit={handleSearchSubmit}>
+            <div className="input-group">
+              <input
+                type="text"
+                value={valueSearch}
+                onChange={handleSearchChange}
+                className="form-control"
+                placeholder="Search tasks..."
+              />
+              {isSearchActive && (
+                <button className="btn btn-block" onClick={clearSearch}>
+                  <i className="btn btn-close text-bg-light"></i>
+                </button>
+              )}
+            </div>
+            <button className="btn btn-primary ms-2" type="submit">
               Search
             </button>
           </form>

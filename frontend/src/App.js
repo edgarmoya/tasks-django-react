@@ -23,7 +23,7 @@ function App() {
               </PrivateRoute>
             }
           >
-            <Route path={PATH_HOME} element={<Navigate to={PATH_TASKS} />} />
+            <Route path={PATH_HOME} element={<Navigate to={PATH_LOGIN} />} />
             <Route path={PATH_TASKS} element={<TasksPage />} />
             <Route path="/tasks-create/" element={<TaskFormPage />} />
             <Route path="/tasks/:id" element={<TaskFormPage />} />
