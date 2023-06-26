@@ -8,7 +8,7 @@ function Modal({ isOpen, title, onClose, children }) {
       role="dialog"
       style={{ display: isOpen ? "block" : "none" }}
     >
-      <div className="modal-dialog">
+      <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">{title}</h5>
