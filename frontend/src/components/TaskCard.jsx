@@ -1,19 +1,12 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import ModalConfirmDelete from "./ModalConfirmDelete";
-import { deleteTask } from "../api/tasks.api";
-import { toast } from "react-hot-toast";
+import React from "react";
 
-function TaskCard({ task, onTaskDeleted }) {
-  const navigate = useNavigate();
-  const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
-
+function TaskCard({ task, onTaskDeleted, onTaskUpdated }) {
   const handleDeleteTask = async (e) => {
-    await deleteTask(task.id);
-    toast.success("Deleted task", {
-      position: "bottom-right",
-    });
-    onTaskDeleted(task.id);
+    onTaskDeleted(task);
+  };
+
+  const handleEditTask = () => {
+    onTaskUpdated(task);
   };
 
   return (
@@ -22,27 +15,15 @@ function TaskCard({ task, onTaskDeleted }) {
         <h2 className="fw-bold">{task.title}</h2>
         <p className="text-slate h-100">{task.description}</p>
         <div className="row">
-          <button
-            className="col btn btn-primary mx-2"
-            onClick={() => {
-              navigate(`/tasks/${task.id}`);
-            }}
-          >
+          <button className="col btn btn-primary mx-2" onClick={handleEditTask}>
             Edit
           </button>
           <button
-            onClick={() => setModalDeleteIsOpen(true)}
+            onClick={handleDeleteTask}
             className="col btn btn-danger mx-2"
           >
             Delete
           </button>
-          <ModalConfirmDelete
-            isOpen={modalDeleteIsOpen}
-            onClose={() => {
-              setModalDeleteIsOpen(false);
-            }}
-            onDelete={handleDeleteTask}
-          />
         </div>
       </div>
     </React.Fragment>

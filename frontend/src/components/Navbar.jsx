@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import logo from "../images/react-icon.svg";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
 
-function Navbar({ onSearch, onClear }) {
+function Navbar({ onSearch, onClear, onCreate }) {
   const { logout } = useContext(AuthContext);
   const [valueSearch, setSearchValue] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -46,9 +46,9 @@ function Navbar({ onSearch, onClear }) {
               </a>
               <ul className="dropdown-menu">
                 <li>
-                  <Link className="dropdown-item" to={"/tasks-create"}>
+                  <div className="dropdown-item" onClick={onCreate}>
                     Create task
-                  </Link>
+                  </div>
                 </li>
                 <li>
                   <hr className="dropdown-divider" />

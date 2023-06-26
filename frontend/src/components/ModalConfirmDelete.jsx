@@ -1,12 +1,12 @@
 import { React, useState } from "react";
 import Modal from "./Modal";
 
-function ModalConfirmDelete({ isOpen, onClose, onDelete }) {
+function ModalConfirmDelete({ isOpen, onClose, onDelete, taskData }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
     setIsLoading(true);
-    await onDelete();
+    await onDelete(taskData.id);
     setIsLoading(false);
     onClose();
   };
@@ -14,7 +14,10 @@ function ModalConfirmDelete({ isOpen, onClose, onDelete }) {
   return (
     <div>
       <Modal isOpen={isOpen} title={"Are you sure?"} onClose={onClose}>
-        <div className="modal-body">You are about to delete this task.</div>
+        <div className="modal-body">
+          You are about to delete task{" "}
+          <strong>{taskData && taskData.title}</strong>.
+        </div>
         <div className="modal-footer">
           <button type="button" onClick={onClose} className="btn btn-secondary">
             Close
