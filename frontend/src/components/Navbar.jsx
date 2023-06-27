@@ -27,7 +27,7 @@ function Navbar({ onSearch, onClear, onCreate }) {
 
   return (
     <React.Fragment>
-      <nav className="navbar navbar-expand-lg bg-light fixed-top bg-body-tertiary">
+      <nav className="navbar navbar-expand-lg bg-light fixed-top bg-body-tertiary nav-opacity">
         <div className="container">
           <Link to={"/tasks"} className="navbar-brand" href="/">
             <img src={logo} height={32} width={32} alt="Logo"></img>
