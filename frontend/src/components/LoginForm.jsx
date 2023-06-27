@@ -14,6 +14,7 @@ export const LoginForm = () => {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleChange = ({ target }) => {
     setFormState({
@@ -31,6 +32,7 @@ export const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setFormSubmitted(true);
     // Validar campos
     login(formState.username, formState.password)
       .then(() => {
@@ -61,7 +63,9 @@ export const LoginForm = () => {
               type="text"
               name="username"
               value={username}
-              className={`form-control ${usernameError ? "is-invalid" : ""}`}
+              className={`form-control ${
+                formSubmitted && usernameError ? "is-invalid" : ""
+              }`}
               placeholder="Username"
               onChange={handleChange}
               onBlur={handleBlur}
@@ -77,7 +81,9 @@ export const LoginForm = () => {
               type={showPwd ? "text" : "password"}
               name="password"
               value={password}
-              className={`form-control ${passwordError ? "is-invalid" : ""}`}
+              className={`form-control ${
+                formSubmitted && passwordError ? "is-invalid" : ""
+              }`}
               placeholder="Password"
               onChange={handleChange}
               onBlur={handleBlur}
