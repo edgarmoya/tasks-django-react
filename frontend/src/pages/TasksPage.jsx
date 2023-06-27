@@ -3,7 +3,7 @@ import TasksList from "../components/TasksList";
 import Navbar from "../components/Navbar";
 import ModalCreateTask from "../components/ModalCreateTask";
 import ModalConfirmDelete from "../components/ModalConfirmDelete";
-import { toast } from "react-hot-toast";
+import { showSuccessToast } from "../utils/toastUtils";
 import {
   createTask,
   updateTask,
@@ -31,9 +31,7 @@ function TasksPage() {
   const handleCreateTask = async (data) => {
     /* TODO: Add message error (try catch) */
     await createTask(data);
-    toast.success("Created task", {
-      position: "bottom-right",
-    });
+    showSuccessToast("Task created");
     loadTasks(); // Refetch tasks after creating a new task
     setModalCreateIsOpen(false); // Close the modal
   };
@@ -41,9 +39,7 @@ function TasksPage() {
   const handleUpdateTask = async (taskId, task) => {
     /* TODO: Add message error (try catch) */
     await updateTask(taskId, task);
-    toast.success("Updated task", {
-      position: "bottom-right",
-    });
+    showSuccessToast("Task updated");
     loadTasks();
     setSelectedTask(null);
     setModalCreateIsOpen(false);
@@ -57,9 +53,7 @@ function TasksPage() {
   const handleDeleteTask = async (taskId) => {
     /* TODO: Add message error (try catch) */
     await deleteTask(taskId);
-    toast.success("Deleted task", {
-      position: "bottom-right",
-    });
+    showSuccessToast("Task deleted");
     loadTasks();
     setSelectedTask(null);
     setModalDeleteIsOpen(false);
