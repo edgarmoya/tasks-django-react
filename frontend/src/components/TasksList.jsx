@@ -1,13 +1,17 @@
 import React from "react";
 import TaskCard from "./TaskCard";
 
-function TasksList({ tasks, onTaskDeleted, onTaskUpdated }) {
+function TasksList({ tasks, onTaskDeleted, onTaskUpdated, onTaskChecked }) {
   const handleTaskUpdated = (task) => {
     onTaskUpdated(task);
   };
 
   const handleTaskDeleted = (task) => {
     onTaskDeleted(task);
+  };
+
+  const handleTaskChecked = (task) => {
+    onTaskChecked(task);
   };
 
   return (
@@ -18,6 +22,7 @@ function TasksList({ tasks, onTaskDeleted, onTaskUpdated }) {
             task={task}
             onTaskDeleted={handleTaskDeleted}
             onTaskUpdated={handleTaskUpdated}
+            onTaskChecked={handleTaskChecked}
           />
         </div>
       ))}

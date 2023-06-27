@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import logo from "../images/react-icon.svg";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
+import IconsNavbar from "../images/IconsNavbar";
 
 function Navbar({ onSearch, onClear, onCreate }) {
   const { logout } = useContext(AuthContext);
@@ -47,7 +48,8 @@ function Navbar({ onSearch, onClear, onCreate }) {
               <ul className="dropdown-menu">
                 <li>
                   <div className="dropdown-item" onClick={onCreate}>
-                    Create task
+                    <IconsNavbar.Create className="text-primary me-2" /> Create
+                    task
                   </div>
                 </li>
                 <li>
@@ -55,7 +57,7 @@ function Navbar({ onSearch, onClear, onCreate }) {
                 </li>
                 <li>
                   <button className="dropdown-item" onClick={logout}>
-                    Logout
+                    <IconsNavbar.Logout className="text-primary me-2" /> Logout
                   </button>
                 </li>
               </ul>

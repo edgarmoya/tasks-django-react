@@ -9,6 +9,7 @@ import {
   updateTask,
   deleteTask,
   getAllTasks,
+  checkTask,
 } from "../api/tasks.api";
 
 function TasksPage() {
@@ -64,6 +65,13 @@ function TasksPage() {
     setModalDeleteIsOpen(true);
   };
 
+  const handleCheckTask = async (task) => {
+    /* TODO: Add message error (try catch) */
+    await checkTask(task.id, task.done);
+    showSuccessToast("Task updated");
+    loadTasks();
+  };
+
   const handleSearch = (searchValue) => {
     const filtered = tasks.filter((task) =>
       task.title.toLowerCase().includes(searchValue.toLowerCase())
@@ -106,6 +114,7 @@ function TasksPage() {
           tasks={filteredTasks}
           onTaskDeleted={handleSelectDeleteTask}
           onTaskUpdated={handleSelectUpdateTask}
+          onTaskChecked={handleCheckTask}
         />
       </div>
     </React.Fragment>
