@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import { useForm } from "react-hook-form";
-import { getTask } from "../api/tasks.api";
 
 function ModalCreateTask({ isOpen, onClose, onCreate, onUpdate, taskData }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,20 +16,19 @@ function ModalCreateTask({ isOpen, onClose, onCreate, onUpdate, taskData }) {
 
   useEffect(() => {
     async function loadTask() {
-      if (taskData) {
-        const {
-          data: { title, description },
-        } = await getTask(taskData.id);
-        setValue("title", title);
-        setValue("description", description);
-      } else {
+      setFormSubmitted(false);
+      if (isOpen) {
+        // Reset the internal state of the component when isOpen changes to true
         setValue("title", "");
         setValue("description", "");
       }
-      setFormSubmitted(false); // Restablecer el estado de formSubmitted
+      if (taskData && taskData.id) {
+        setValue("title", taskData.title);
+        setValue("description", taskData.description);
+      }
     }
     loadTask();
-  }, [setValue, taskData]);
+  }, [setValue, taskData, isOpen]);
 
   const handleSaveTask = async (data) => {
     setIsLoading(true);
@@ -65,24 +63,40 @@ function ModalCreateTask({ isOpen, onClose, onCreate, onUpdate, taskData }) {
       >
         <div className="modal-body">
           <form onSubmit={handleFormSubmit}>
-            <input
-              className={`form-control mt-3 ${
-                formSubmitted && errors.title ? "is-invalid" : ""
-              }`}
-              type="text"
-              placeholder="Title"
-              {...register("title", { required: true })}
-              defaultValue={taskData?.title}
-            ></input>
-            <textarea
-              className={`form-control mt-3 ${
-                formSubmitted && errors.description ? "is-invalid" : ""
-              }`}
-              placeholder="Description"
-              rows={3}
-              {...register("description", { required: true })}
-              defaultValue={taskData?.description}
-            ></textarea>
+            <div className="form-floating">
+              <input
+                className={`form-control ${
+                  formSubmitted && errors.title ? "is-invalid" : ""
+                }`}
+                type="text"
+                placeholder="Title"
+                {...register("title", { required: true })}
+                defaultValue={taskData?.title}
+              ></input>
+              <label htmlFor="floatingInput">Title</label>
+              {errors.title && (
+                <div className="invalid-feedback">
+                  Please enter the title of the task
+                </div>
+              )}
+            </div>
+            <div className="form-floating">
+              <textarea
+                className={`form-control mt-3 ${
+                  formSubmitted && errors.description ? "is-invalid" : ""
+                }`}
+                placeholder="Description"
+                rows={4}
+                {...register("description", { required: true })}
+                defaultValue={taskData?.description}
+              ></textarea>
+              <label htmlFor="floatingInput">Description</label>
+              {errors.description && (
+                <div className="invalid-feedback">
+                  Please enter the description of the task
+                </div>
+              )}
+            </div>
           </form>
         </div>
         <div className="modal-footer">

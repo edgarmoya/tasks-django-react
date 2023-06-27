@@ -29,23 +29,24 @@ function TasksPage() {
   };
 
   const handleCreateTask = async (data) => {
+    /* TODO: Add message error (try catch) */
     await createTask(data);
     toast.success("Created task", {
       position: "bottom-right",
     });
     loadTasks(); // Refetch tasks after creating a new task
     setModalCreateIsOpen(false); // Close the modal
-    setSelectedTask(null);
   };
 
   const handleUpdateTask = async (taskId, task) => {
+    /* TODO: Add message error (try catch) */
     await updateTask(taskId, task);
     toast.success("Updated task", {
       position: "bottom-right",
     });
     loadTasks();
-    setModalCreateIsOpen(false);
     setSelectedTask(null);
+    setModalCreateIsOpen(false);
   };
 
   const handleSelectUpdateTask = async (task) => {
@@ -54,13 +55,14 @@ function TasksPage() {
   };
 
   const handleDeleteTask = async (taskId) => {
+    /* TODO: Add message error (try catch) */
     await deleteTask(taskId);
     toast.success("Deleted task", {
       position: "bottom-right",
     });
     loadTasks();
-    setModalDeleteIsOpen(false);
     setSelectedTask(null);
+    setModalDeleteIsOpen(false);
   };
 
   const handleSelectDeleteTask = async (task) => {
