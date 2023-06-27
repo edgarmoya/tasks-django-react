@@ -101,11 +101,13 @@ function TasksPage() {
         taskData={selectedTask}
       />
 
-      <TasksList
-        tasks={filteredTasks}
-        onTaskDeleted={handleSelectDeleteTask}
-        onTaskUpdated={handleSelectUpdateTask}
-      />
+      <div className="tasks-container">
+        <TasksList
+          tasks={filteredTasks}
+          onTaskDeleted={handleSelectDeleteTask}
+          onTaskUpdated={handleSelectUpdateTask}
+        />
+      </div>
     </React.Fragment>
   );
 }

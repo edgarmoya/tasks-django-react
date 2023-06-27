@@ -42,3 +42,19 @@
   bottom: 25%;
   right: 5%;
 }
+
+.tasks-container {
+  margin-top: 20px;
+}
+
+@media screen and (max-width: 516px) {
+  .tasks-container {
+    margin-top: 110px;
+  }
+}
+
+@media screen and (max-width: 228px) {
+  .tasks-container {
+    margin-top: 150px;
+  }
+}

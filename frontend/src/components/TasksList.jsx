@@ -11,9 +11,9 @@ function TasksList({ tasks, onTaskDeleted, onTaskUpdated }) {
   };
 
   return (
-    <div className="row my-4">
+    <div className="row my-2">
       {tasks.map((task) => (
-        <div key={task.id} className="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex">
+        <div key={task.id} className="col-lg-4 col-md-6 col-sm-12 mb-3 d-flex">
           <TaskCard
             task={task}
             onTaskDeleted={handleTaskDeleted}
