@@ -23,7 +23,7 @@ function ModalConfirmDelete({ isOpen, onClose, onDelete, taskData }) {
             Close
           </button>
           <button
-            className="btn btn-danger"
+            className="btn btn-outline-danger"
             onClick={handleDelete}
             disabled={isLoading}
           >
