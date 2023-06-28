@@ -3,9 +3,11 @@ import logo from "../images/react-icon.svg";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
 import IconsNavbar from "../images/IconsNavbar";
+import ModalConfirmLogout from "./ModalConfirmLogout";
 
 function Navbar({ onSearch, onClear, onCreate }) {
   const { logout } = useContext(AuthContext);
+  const [modalLogoutIsOpen, setModalLogoutIsOpen] = useState(false);
   const [valueSearch, setSearchValue] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
 
@@ -18,6 +20,11 @@ function Navbar({ onSearch, onClear, onCreate }) {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     onSearch(valueSearch);
+  };
+
+  const handleLogout = (event) => {
+    event.preventDefault();
+    setModalLogoutIsOpen(true);
   };
 
   const clearSearch = () => {
@@ -56,7 +63,7 @@ function Navbar({ onSearch, onClear, onCreate }) {
                   <hr className="dropdown-divider" />
                 </li>
                 <li>
-                  <button className="dropdown-item" onClick={logout}>
+                  <button className="dropdown-item" onClick={handleLogout}>
                     <IconsNavbar.Logout className="text-primary me-2" /> Logout
                   </button>
                 </li>
@@ -84,6 +91,12 @@ function Navbar({ onSearch, onClear, onCreate }) {
           </form>
         </div>
       </nav>
+
+      <ModalConfirmLogout
+        isOpen={modalLogoutIsOpen}
+        onClose={() => setModalLogoutIsOpen(false)}
+        onLogout={logout}
+      />
     </React.Fragment>
   );
 }
