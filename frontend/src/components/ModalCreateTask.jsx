@@ -82,7 +82,7 @@ function ModalCreateTask({ isOpen, onClose, onCreate, onUpdate, taskData }) {
             </div>
             <div className="form-floating">
               <textarea
-                className={`form-control mt-3 ${
+                className={`form-control h-auto mt-3 ${
                   formSubmitted && errors.description ? "is-invalid" : ""
                 }`}
                 placeholder="Description"

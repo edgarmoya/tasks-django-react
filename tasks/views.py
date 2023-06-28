@@ -5,4 +5,4 @@ from .models import Task
 # Create your views here.
 class TaskView(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
-    queryset = Task.objects.all()
+    queryset = Task.objects.all().order_by('created')
