@@ -4,10 +4,11 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import TasksPage from "./pages/TasksPage";
 import TaskFormPage from "./pages/TaskFormPage";
 import LoginPage from "./pages/LoginPage";
+import AdminPage from "./pages/AdminPage";
 import Layout from "./components/Layout";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./contexts/authContext";
-import { PATH_HOME, PATH_TASKS, PATH_LOGIN } from "./routes/Paths";
+import Paths from "./routes/Paths";
 import { PrivateRoute } from "./routes/PrivateRoute";
 
 function App() {
@@ -15,18 +16,11 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path={PATH_LOGIN} element={<LoginPage />} />
-          <Route
-            element={
-              <PrivateRoute>
-                <Layout />
-              </PrivateRoute>
-            }
-          >
-            <Route path={PATH_HOME} element={<Navigate to={PATH_LOGIN} />} />
-            <Route path={PATH_TASKS} element={<TasksPage />} />
-            <Route path="/tasks-create/" element={<TaskFormPage />} />
-            <Route path="/tasks/:id" element={<TaskFormPage />} />
+          <Route path={Paths.ADMIN} element={<AdminPage />} />
+          <Route path={Paths.LOGIN} element={<LoginPage />} />
+          <Route element={<Layout />}>
+            <Route path={Paths.HOME} element={<Navigate to={Paths.LOGIN} />} />
+            <Route path={Paths.TASKS} element={<TasksPage />} />
           </Route>
         </Routes>
         <Toaster />
@@ -36,3 +30,17 @@ function App() {
 }
 
 export default App;
+
+/*
+<Route
+            element={
+              <PrivateRoute>
+                <Layout />
+              </PrivateRoute>
+            }
+          >
+            <Route path={Paths.HOME} element={<Navigate to={Paths.LOGIN} />} />
+            <Route path={Paths.TASKS} element={<TasksPage />} />
+            <Route path="/tasks-create/" element={<TaskFormPage />} />
+            <Route path="/tasks/:id" element={<TaskFormPage />} />
+          </Route> */

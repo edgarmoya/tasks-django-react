@@ -26,7 +26,7 @@ function ModalConfirmLogout({ isOpen, onClose, onLogout }) {
             onClick={handleLogout}
             disabled={isLoading}
           >
-            {isLoading ? "Coming out..." : "Go out"}
+            {isLoading ? "Logging out..." : "Logout"}
           </button>
         </div>
       </Modal>

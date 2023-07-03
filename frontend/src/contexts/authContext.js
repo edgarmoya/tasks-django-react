@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { PATH_TASKS, PATH_LOGIN } from "../routes/Paths";
+import Paths from "../routes/Paths";
 
 export const AuthContext = createContext();
 
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
-      navigate(`${PATH_TASKS}`);
+      navigate(`${Paths.TASKS}`);
     } else if (response.status === 401) {
       throw new Error("Invalid credentials");
     } else {
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
-    navigate(`${PATH_LOGIN}`);
+    navigate(`${Paths.LOGIN}`);
   };
 
   const contextData = {

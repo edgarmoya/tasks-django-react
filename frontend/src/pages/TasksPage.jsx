@@ -30,7 +30,7 @@ function TasksPage() {
   };
 
   const handleCreateTask = async (data) => {
-    /* TODO: Add message error (try catch) */
+    // TODO: Add message error (try catch)
     await createTask(data);
     showSuccessToast("Task created");
     loadTasks(); // Refetch tasks after creating a new task
@@ -38,7 +38,7 @@ function TasksPage() {
   };
 
   const handleUpdateTask = async (taskId, task) => {
-    /* TODO: Add message error (try catch) */
+    // TODO: Add message error (try catch)
     await updateTask(taskId, task);
     showSuccessToast("Task updated");
     loadTasks();
@@ -52,7 +52,7 @@ function TasksPage() {
   };
 
   const handleDeleteTask = async (taskId) => {
-    /* TODO: Add message error (try catch) */
+    // TODO: Add message error (try catch)
     await deleteTask(taskId);
     showSuccessToast("Task deleted");
     loadTasks();
@@ -66,7 +66,7 @@ function TasksPage() {
   };
 
   const handleCheckTask = async (task) => {
-    /* TODO: Add message error (try catch) */
+    // TODO: Add message error (try catch)
     await checkTask(task.id, task.done);
     showSuccessToast("Task updated");
     loadTasks();
@@ -87,7 +87,7 @@ function TasksPage() {
         onCreate={() => setModalCreateIsOpen(true)}
       />
 
-      {/* Render the modal component outside the Navbar */}
+      {/* Render the modal component outside the Navbar*/}
       <ModalCreateTask
         isOpen={modalCreateIsOpen}
         onClose={() => {

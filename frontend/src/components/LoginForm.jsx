@@ -1,12 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+import axiosInstance from "../utils/axios";
 import logo from "../images/react-icon.svg";
-import { AuthContext } from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { PATH_TASKS } from "../routes/Paths";
+import Paths from "../routes/Paths";
 
 export const LoginForm = () => {
-  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [formState, setFormState] = useState({ username: "", password: "" });
@@ -33,10 +32,18 @@ export const LoginForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
-    // Validar campos
-    login(formState.username, formState.password)
-      .then(() => {
-        navigate(`${PATH_TASKS}`);
+
+    axiosInstance
+      .post(`token/`, {
+        email: formState.username,
+        password: formState.password,
+      })
+      .then((res) => {
+        localStorage.setItem("access_token", res.data.access);
+        localStorage.setItem("refresh_token", res.data.refresh);
+        axiosInstance.defaults.headers["Authorization"] =
+          "JWT " + localStorage.getItem("access_token");
+        navigate(`${Paths.TASKS}`);
         toast.success(`Welcome back, ${formState.username}`);
       })
       .catch((error) => {
