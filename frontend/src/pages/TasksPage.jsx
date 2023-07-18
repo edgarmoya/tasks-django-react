@@ -1,37 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import TasksList from "../components/TasksList";
 import Navbar from "../components/Navbar";
 import ModalCreateTask from "../components/ModalCreateTask";
 import ModalConfirmDelete from "../components/ModalConfirmDelete";
 import { showSuccessToast } from "../utils/toastUtils";
-import {
-  createTask,
-  updateTask,
-  deleteTask,
-  getAllTasks,
-  checkTask,
-} from "../api/tasks.api";
+import TaskService from "../api/tasks.api";
+import { AuthContext } from "../contexts/authContext";
 
 function TasksPage() {
+  const { authTokens, logoutUser } = useContext(AuthContext);
   const [tasks, setTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [modalCreateIsOpen, setModalCreateIsOpen] = useState(false);
   const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
+  const loadTasks = async () => {
+    try {
+      const res = await TaskService.getAllTasks(authTokens);
+      setTasks(res.data);
+      setFilteredTasks(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     loadTasks();
   }, []);
 
-  const loadTasks = async () => {
-    const res = await getAllTasks();
-    setTasks(res.data);
-    setFilteredTasks(res.data);
-  };
-
   const handleCreateTask = async (data) => {
     // TODO: Add message error (try catch)
-    await createTask(data);
+    await TaskService.createTask(authTokens, data);
     showSuccessToast("Task created");
     loadTasks(); // Refetch tasks after creating a new task
     setModalCreateIsOpen(false); // Close the modal
@@ -39,7 +39,7 @@ function TasksPage() {
 
   const handleUpdateTask = async (taskId, task) => {
     // TODO: Add message error (try catch)
-    await updateTask(taskId, task);
+    await TaskService.updateTask(authTokens, taskId, task);
     showSuccessToast("Task updated");
     loadTasks();
     setSelectedTask(null);
@@ -53,7 +53,7 @@ function TasksPage() {
 
   const handleDeleteTask = async (taskId) => {
     // TODO: Add message error (try catch)
-    await deleteTask(taskId);
+    await TaskService.deleteTask(authTokens, taskId);
     showSuccessToast("Task deleted");
     loadTasks();
     setSelectedTask(null);
@@ -67,7 +67,7 @@ function TasksPage() {
 
   const handleCheckTask = async (task) => {
     // TODO: Add message error (try catch)
-    await checkTask(task.id, task.done);
+    await TaskService.checkTask(authTokens, task.id, task.done);
     showSuccessToast("Task updated");
     loadTasks();
   };
@@ -85,6 +85,7 @@ function TasksPage() {
         onSearch={handleSearch}
         onClear={() => setFilteredTasks(tasks)}
         onCreate={() => setModalCreateIsOpen(true)}
+        onLogout={logoutUser}
       />
 
       {/* Render the modal component outside the Navbar*/}
@@ -109,7 +110,7 @@ function TasksPage() {
         taskData={selectedTask}
       />
 
-      <div className="tasks-container">
+      <div className="tasks-container container mx-auto">
         <TasksList
           tasks={filteredTasks}
           onTaskDeleted={handleSelectDeleteTask}

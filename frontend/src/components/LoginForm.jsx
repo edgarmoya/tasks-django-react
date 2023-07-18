@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import axiosInstance from "../utils/axios";
+import React, { useState, useContext } from "react";
 import logo from "../images/react-icon.svg";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import Paths from "../routes/Paths";
+import AuthContext from "../contexts/authContext";
 
 export const LoginForm = () => {
   const navigate = useNavigate();
+  const { loginUser } = useContext(AuthContext);
 
   const [formState, setFormState] = useState({ username: "", password: "" });
   const { username, password } = formState;
@@ -33,16 +34,8 @@ export const LoginForm = () => {
     e.preventDefault();
     setFormSubmitted(true);
 
-    axiosInstance
-      .post(`token/`, {
-        email: formState.username,
-        password: formState.password,
-      })
-      .then((res) => {
-        localStorage.setItem("access_token", res.data.access);
-        localStorage.setItem("refresh_token", res.data.refresh);
-        axiosInstance.defaults.headers["Authorization"] =
-          "JWT " + localStorage.getItem("access_token");
+    loginUser(username, password)
+      .then((data) => {
         navigate(`${Paths.TASKS}`);
         toast.success(`Welcome back, ${formState.username}`);
       })
