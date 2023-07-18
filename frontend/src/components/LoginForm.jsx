@@ -1,13 +1,13 @@
 import React, { useState, useContext } from "react";
 import logo from "../images/react-icon.svg";
-import { AuthContext } from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { PATH_TASKS } from "../routes/Paths";
+import Paths from "../routes/Paths";
+import AuthContext from "../contexts/authContext";
 
 export const LoginForm = () => {
-  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { loginUser } = useContext(AuthContext);
 
   const [formState, setFormState] = useState({ username: "", password: "" });
   const { username, password } = formState;
@@ -33,10 +33,10 @@ export const LoginForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
-    // Validar campos
-    login(formState.username, formState.password)
-      .then(() => {
-        navigate(`${PATH_TASKS}`);
+
+    loginUser(username, password)
+      .then((data) => {
+        navigate(`${Paths.TASKS}`);
         toast.success(`Welcome back, ${formState.username}`);
       })
       .catch((error) => {

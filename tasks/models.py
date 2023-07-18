@@ -1,7 +1,10 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 class Task(models.Model):
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='tasks', verbose_name='User')
     title = models.CharField(max_length=50, verbose_name='Title')
     description = models.TextField(blank=True, verbose_name='Description')
     done = models.BooleanField(default=False, verbose_name='Done')
