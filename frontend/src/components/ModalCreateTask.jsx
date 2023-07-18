@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Modal from "./Modal";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "../contexts/authContext";
 
 function ModalCreateTask({ isOpen, onClose, onCreate, onUpdate, taskData }) {
+  const { user } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -33,10 +35,15 @@ function ModalCreateTask({ isOpen, onClose, onCreate, onUpdate, taskData }) {
   const handleSaveTask = async (data) => {
     setIsLoading(true);
 
+    const taskDataWithUser = {
+      user: user.user_id,
+      ...data,
+    };
+
     if (taskData && taskData.id) {
-      await onUpdate(taskData.id, data);
+      await onUpdate(taskData.id, taskDataWithUser);
     } else {
-      await onCreate(data);
+      await onCreate(taskDataWithUser);
     }
 
     setIsLoading(false);

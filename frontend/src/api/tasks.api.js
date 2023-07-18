@@ -1,18 +1,54 @@
 import axios from "axios";
 
 const taskAPI = axios.create({
-  baseURL: "http://localhost:8000/tasks/api/v1/tasks/",
+  baseURL: "http://localhost:8000/api/tasks",
 });
 
-export const getAllTasks = () => taskAPI.get("/");
+const createHeaders = (authTokens) => ({
+  "Content-Type": "application/json",
+  Authorization: "Bearer " + String(authTokens.access),
+});
 
-export const getTask = (id) => taskAPI.get(`/${id}/`);
+const TaskService = {
+  getAllTasks: async (authTokens) => {
+    return taskAPI.get("/", {
+      headers: createHeaders(authTokens),
+    });
+  },
 
-export const createTask = (task) => taskAPI.post("/", task);
+  getTask: async (authTokens, id) => {
+    return taskAPI.get(`/${id}/`, {
+      headers: createHeaders(authTokens),
+    });
+  },
 
-export const deleteTask = (id) => taskAPI.delete(`/${id}/`);
+  createTask: async (authTokens, task) => {
+    return taskAPI.post("/", task, {
+      headers: createHeaders(authTokens),
+    });
+  },
 
-export const updateTask = (id, task) => taskAPI.put(`/${id}/`, task);
+  deleteTask: async (authTokens, id) => {
+    return taskAPI.delete(`/${id}/`, {
+      headers: createHeaders(authTokens),
+    });
+  },
 
-export const checkTask = (id, status) =>
-  taskAPI.patch(`/${id}/`, { done: !status });
+  updateTask: async (authTokens, id, task) => {
+    return taskAPI.put(`/${id}/`, task, {
+      headers: createHeaders(authTokens),
+    });
+  },
+
+  checkTask: async (authTokens, id, status) => {
+    return taskAPI.patch(
+      `/${id}/`,
+      { done: !status },
+      {
+        headers: createHeaders(authTokens),
+      }
+    );
+  },
+};
+
+export default TaskService;

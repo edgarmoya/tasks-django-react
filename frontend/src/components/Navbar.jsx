@@ -1,12 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import logo from "../images/react-icon.svg";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../contexts/authContext";
 import IconsNavbar from "../images/IconsNavbar";
 import ModalConfirmLogout from "./ModalConfirmLogout";
 
-function Navbar({ onSearch, onClear, onCreate }) {
-  const { logout } = useContext(AuthContext);
+function Navbar({ onSearch, onClear, onCreate, onLogout }) {
   const [modalLogoutIsOpen, setModalLogoutIsOpen] = useState(false);
   const [valueSearch, setSearchValue] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -95,7 +93,7 @@ function Navbar({ onSearch, onClear, onCreate }) {
       <ModalConfirmLogout
         isOpen={modalLogoutIsOpen}
         onClose={() => setModalLogoutIsOpen(false)}
-        onLogout={logout}
+        onLogout={onLogout}
       />
     </React.Fragment>
   );

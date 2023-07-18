@@ -5,7 +5,6 @@ import { Outlet } from "react-router-dom";
 const Layout = () => {
   return (
     <React.Fragment>
-      {/*<Navbar /> */}
       <main className="container mx-auto">
         <Outlet />
       </main>

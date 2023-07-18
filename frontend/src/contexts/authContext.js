@@ -1,72 +1,109 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { PATH_TASKS, PATH_LOGIN } from "../routes/Paths";
+import Paths from "../routes/Paths";
 
+const AUTH_TOKEN = "authTokens";
 export const AuthContext = createContext();
+
+export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const [authTokens, setAuthTokens] = useState(() =>
-    localStorage.getItem("authTokens")
-      ? JSON.parse(localStorage.getItem("authTokens"))
-      : null
+  const [authTokens, setAuthTokens] = useState(
+    () => JSON.parse(localStorage.getItem(AUTH_TOKEN)) || null
   );
+
   const [user, setUser] = useState(() =>
-    localStorage.getItem("authTokens")
-      ? jwt_decode(localStorage.getItem("authTokens"))
-      : null
+    authTokens ? jwt_decode(authTokens.access) : null
   );
 
-  const login = async (username, password) => {
-    const response = await fetch("http://127.0.0.1:8000/users/token/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
-
-    if (response.ok) {
+  const loginUser = async (username, password) => {
+    try {
+      const response = await fetch("http://localhost:8000/api/token/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: username,
+          password: password,
+        }),
+      });
       const data = await response.json();
-      setAuthTokens(data);
-      setUser(jwt_decode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
-      navigate(`${PATH_TASKS}`);
-    } else if (response.status === 401) {
-      throw new Error("Invalid credentials");
-    } else {
-      throw new Error("Something went wrong!");
+
+      if (response.status === 200) {
+        setAuthTokens(data);
+        setUser(jwt_decode(data.access));
+        localStorage.setItem(AUTH_TOKEN, JSON.stringify(data));
+        navigate(Paths.TASKS);
+      } else {
+        throw new Error("Login failed!");
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      throw new Error("Login failed!");
     }
   };
 
-  const logout = () => {
+  const logoutUser = useCallback(() => {
     setAuthTokens(null);
     setUser(null);
-    localStorage.removeItem("authTokens");
-    navigate(`${PATH_LOGIN}`);
-  };
+    localStorage.removeItem(AUTH_TOKEN);
+    navigate(Paths.LOGIN);
+  }, [navigate]);
+
+  const updateToken = useCallback(async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/token/refresh/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refresh: authTokens?.refresh }),
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setAuthTokens(data);
+        setUser(jwt_decode(data.access));
+        localStorage.setItem(AUTH_TOKEN, JSON.stringify(data));
+      } else {
+        logoutUser();
+      }
+
+      if (loading) {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error updating token:", error);
+      throw new Error("Error updating token");
+    }
+  }, [authTokens?.refresh, loading, logoutUser]);
+
+  useEffect(() => {
+    if (loading) {
+      updateToken();
+    }
+
+    const fourMinutes = 1000 * 60 * 4;
+    const interval = setInterval(() => {
+      if (authTokens) {
+        updateToken();
+      }
+    }, fourMinutes);
+
+    return () => clearInterval(interval);
+  }, [authTokens, loading, updateToken]);
 
   const contextData = {
     user,
-    setUser,
     authTokens,
-    setAuthTokens,
-    login,
-    logout,
+    loginUser,
+    logoutUser,
   };
-
-  useEffect(() => {
-    if (authTokens) {
-      setUser(jwt_decode(authTokens.access));
-    }
-    setLoading(false);
-  }, [authTokens, loading]);
 
   return (
     <AuthContext.Provider value={contextData}>

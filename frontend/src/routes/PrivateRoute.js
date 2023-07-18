@@ -1,15 +1,9 @@
-import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
-import { PATH_LOGIN } from "./Paths";
+import { Route, Outlet, Navigate } from "react-router-dom";
+import { useContext } from "react";
 import { AuthContext } from "../contexts/authContext";
+import Paths from "./Paths";
 
-export const PrivateRoute = ({ children }) => {
-  const { user } = useContext(AuthContext);
-  const now = Math.floor(Date.now() / 1000);
-  console.log(now); // Imprime la hora actual en formato Unix
-  if (!user) {
-    return <Navigate to={PATH_LOGIN} />;
-  }
-
-  return children;
-};
+export default function PrivateRoute() {
+  let { user } = useContext(AuthContext);
+  return <>{user ? <Outlet /> : <Navigate to={Paths.LOGIN} />}</>;
+}
