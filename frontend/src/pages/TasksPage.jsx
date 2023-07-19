@@ -6,6 +6,7 @@ import ModalConfirmDelete from "../components/ModalConfirmDelete";
 import { showSuccessToast } from "../utils/toastUtils";
 import TaskService from "../api/tasks.api";
 import { AuthContext } from "../contexts/authContext";
+import Pagination from "../components/Pagination";
 
 function TasksPage() {
   const { authTokens, logoutUser } = useContext(AuthContext);
@@ -14,26 +15,37 @@ function TasksPage() {
   const [modalCreateIsOpen, setModalCreateIsOpen] = useState(false);
   const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalTasks, setTotalTasks] = useState(1);
 
-  const loadTasks = async () => {
+  const loadFilteredTasks = async () => {
     try {
-      const res = await TaskService.getAllTasks(authTokens);
-      setTasks(res.data);
-      setFilteredTasks(res.data);
+      const tasksForPage = await TaskService.getTasksForPage(
+        authTokens,
+        currentPage
+      );
+      console.log(tasksForPage.data.results);
+      setTasks(tasksForPage.data.results);
+      setFilteredTasks(tasksForPage.data.results);
+      setTotalTasks(tasksForPage.data.count);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching tasks for page:", error);
     }
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   useEffect(() => {
-    loadTasks();
-  }, []);
+    loadFilteredTasks();
+  }, [currentPage]);
 
   const handleCreateTask = async (data) => {
     // TODO: Add message error (try catch)
     await TaskService.createTask(authTokens, data);
     showSuccessToast("Task created");
-    loadTasks(); // Refetch tasks after creating a new task
+    loadFilteredTasks(); // Refetch tasks after creating a new task
     setModalCreateIsOpen(false); // Close the modal
   };
 
@@ -41,7 +53,7 @@ function TasksPage() {
     // TODO: Add message error (try catch)
     await TaskService.updateTask(authTokens, taskId, task);
     showSuccessToast("Task updated");
-    loadTasks();
+    loadFilteredTasks();
     setSelectedTask(null);
     setModalCreateIsOpen(false);
   };
@@ -55,7 +67,7 @@ function TasksPage() {
     // TODO: Add message error (try catch)
     await TaskService.deleteTask(authTokens, taskId);
     showSuccessToast("Task deleted");
-    loadTasks();
+    loadFilteredTasks();
     setSelectedTask(null);
     setModalDeleteIsOpen(false);
   };
@@ -69,7 +81,7 @@ function TasksPage() {
     // TODO: Add message error (try catch)
     await TaskService.checkTask(authTokens, task.id, task.done);
     showSuccessToast("Task updated");
-    loadTasks();
+    loadFilteredTasks();
   };
 
   const handleSearch = (searchValue) => {
@@ -116,6 +128,11 @@ function TasksPage() {
           onTaskDeleted={handleSelectDeleteTask}
           onTaskUpdated={handleSelectUpdateTask}
           onTaskChecked={handleCheckTask}
+        />
+        <Pagination
+          onPageChange={handlePageChange}
+          currentPage={currentPage}
+          totalTasks={totalTasks}
         />
       </div>
     </React.Fragment>

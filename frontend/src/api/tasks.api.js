@@ -16,6 +16,15 @@ const TaskService = {
     });
   },
 
+  getTasksForPage: async (authTokens, page) => {
+    return await taskAPI.get("/", {
+      headers: createHeaders(authTokens),
+      params: {
+        page: page,
+      },
+    });
+  },
+
   getTask: async (authTokens, id) => {
     return taskAPI.get(`/${id}/`, {
       headers: createHeaders(authTokens),
